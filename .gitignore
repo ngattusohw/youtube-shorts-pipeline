@@ -1,0 +1,40 @@
+# Secrets and credentials
+secrets/
+token.json
+client_secrets.json
+client_secret*.json
+*.credentials
+
+# Video files
+*.mp4
+*.MP4
+*.mov
+*.MOV
+*.avi
+*.mkv
+
+# Generated output
+generated/*
+!generated/.gitkeep
+
+# Content files (keep folder structure)
+content/*
+!content/README.md
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+venv/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
