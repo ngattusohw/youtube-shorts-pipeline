@@ -1,5 +1,6 @@
-# Secrets and credentials
-secrets/
+# Secrets and credentials (keep folder, ignore contents)
+secrets/*
+!secrets/README.md
 token.json
 client_secrets.json
 client_secret*.json
