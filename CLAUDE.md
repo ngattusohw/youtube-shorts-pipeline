@@ -199,6 +199,27 @@ Available presets: `sauna`, `tesla`, `cats`, `travel`
 upload_video(youtube, path, title, is_short=True, preset="sauna")
 ```
 
+## Editing Style Defaults
+
+Defaults for this user's Shorts (don't ask, just apply unless they say otherwise):
+
+- **Pure ASMR.** Keep original audio. No music, no voice-over, no burned captions, no on-screen text.
+- **Smart center-crop** 16:9 → 9:16 (not letterbox). Use a per-segment `x_offset` (in `edl.json`) only when the subject is clearly off-center.
+- **Skip out-of-sequence B-roll.** If a clip's lighting/foliage/season doesn't match the rest of the day, drop it unless it's an intentional flashback.
+- **Let segments breathe.** Default per-segment length **8–12s** (was 5–8s, too short). Aim for total Short length **45–55s** — closer to the 60s cap, not 20–30s. Don't cut mid-action just because the next thumbnail looks similar; the audio is the point.
+- **Title format (sauna series, from #34 onward):** `DIY backyard sauna build — <single word>`. The "DIY" prefix helps discovery; the one-word subtitle is punchier than a phrase. Examples: "drilling", "cedar", "rain", "shadow". Never two words after the em-dash. (Earlier shorts #1-33 used the older `Backyard sauna build — <phrase>` format; don't retitle them.)
+- **Schedule cadence:** daily at **17:00 UTC** (noon ET), 24h apart. Continue from the next open slot — don't restart at "tomorrow."
+- **Preset:** use `preset="sauna"` for sauna content — it adds the right description + tags.
+
+### Picking cut points
+
+For each source, run `python lib/analyze_source.py content/<file>.mov` first. Output goes to `edit/analysis/<stem>/`:
+
+- `report.md` — sustained loud sections (active ASMR moments), quiet sections (atmospheric beats), scene-cut timestamps, full 1-Hz RMS trace.
+- `thumbnails/frame_NNNNs.jpg` — HDR-tonemapped at 10s intervals (override with `--interval`).
+
+Use these to pick cuts: **start** segments at scene cuts or the leading edge of a loud run; **end** at the trailing edge of the loud run, not the next visual change. A drill that runs 12 seconds gets a 12-second cut.
+
 ## Common Tasks
 
 ### "Edit this video for Shorts"
@@ -223,7 +244,13 @@ upload_video(youtube, path, title, is_short=True, preset="sauna")
 
 ## Dependencies
 
-- Python 3.8+
-- ffmpeg / ffprobe
+- Python 3.8+ (use the `.venv/` in this repo — `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`)
+- **ffmpeg built with zimg** — required for proper HDR (HLG / Dolby Vision) → SDR tone mapping via `zscale` + `tonemap=hable`. The stock `brew install ffmpeg` does **not** include zimg. Install via the `homebrew-ffmpeg` tap:
+  ```bash
+  brew uninstall --ignore-dependencies ffmpeg
+  brew tap homebrew-ffmpeg/ffmpeg
+  brew install homebrew-ffmpeg/ffmpeg/ffmpeg --with-zimg
+  ```
+  Verify: `ffmpeg -filters | grep zscale`. Without it, `render_vertical.py` will error and SDR output looks washed/low-contrast.
 - Pillow (for animation generation)
 - google-api-python-client (for YouTube upload)

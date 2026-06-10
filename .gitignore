@@ -22,6 +22,16 @@ generated/*
 content/*
 !content/README.md
 
+# Edit working dirs — keep edl.json and any committed scripts;
+# ignore generated artifacts (thumbnails, previews, analyzer output, tmp segments)
+edit/_tmp_segments/
+edit/thumbnails/
+edit/thumbnails_*/
+edit/preview/
+edit/preview_*/
+edit/tone_test/
+edit/analysis/
+
 # Python
 __pycache__/
 *.py[cod]
