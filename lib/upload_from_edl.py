@@ -18,8 +18,11 @@ REPO = Path(__file__).resolve().parent.parent
 EDL_PATH = REPO / "edit" / "edl.json"
 GEN = REPO / "generated"
 
-HASHTAG_TAIL = "#Shorts #DIY #SaunaBuild #ASMR #Satisfying"
-PRESET_TAGS = PRESETS["sauna"]["tags"]
+HASHTAG_TAILS = {
+    "sauna": "#Shorts #DIY #SaunaBuild #ASMR #Satisfying",
+    "roofing": "#Shorts #DIY #Roofing #ASMR #Satisfying",
+}
+DEFAULT_PRESET = "sauna"
 
 
 def main():
@@ -44,13 +47,16 @@ def main():
             print(f"SKIP: {path} not found", file=sys.stderr)
             continue
 
+        preset_name = s.get("preset", DEFAULT_PRESET)
+        tail = HASHTAG_TAILS[preset_name]
+        tags = list(PRESETS[preset_name]["tags"])
         body_desc = s.get("description", "").strip()
-        description = f"{body_desc}\n\n{HASHTAG_TAIL}" if body_desc else HASHTAG_TAIL
+        description = f"{body_desc}\n\n{tail}" if body_desc else tail
 
         vid, url = upload_video(
             yt, path, s["title"],
             description=description,
-            tags=list(PRESET_TAGS),
+            tags=tags,
             is_short=True,
             privacy="private",
             schedule=s["schedule"],

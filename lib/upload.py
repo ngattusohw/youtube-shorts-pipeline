@@ -29,7 +29,7 @@ from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
-SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
+SCOPES = ["https://www.googleapis.com/auth/youtube.force-ssl"]
 
 # Paths relative to repo root
 REPO_ROOT = Path(__file__).parent.parent
@@ -54,6 +54,10 @@ PRESETS = {
     "travel": {
         "description": "#Shorts #Travel #Adventure #Wanderlust",
         "tags": ["travel", "adventure", "vacation", "wanderlust", "explore"],
+    },
+    "roofing": {
+        "description": "Re-roofing a house — GAF StormGuard leak barrier and asphalt shingles.\n\n#Shorts #DIY #Roofing #ASMR #Satisfying",
+        "tags": ["roofing", "diy", "construction", "shingles", "home improvement", "asmr", "satisfying", "build"],
     },
 }
 
@@ -84,7 +88,7 @@ def get_authenticated_service():
 
             print("Opening browser for authorization...")
             flow = InstalledAppFlow.from_client_secrets_file(str(CREDENTIALS_FILE), SCOPES)
-            creds = flow.run_local_server(port=8080)
+            creds = flow.run_local_server(port=0)
 
         # Save credentials for next run
         with open(TOKEN_FILE, "w") as f:
